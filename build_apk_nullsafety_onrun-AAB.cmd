@@ -1,0 +1,1 @@
+build_appbundle.cmd && pause

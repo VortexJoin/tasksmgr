@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tasksmgr/extensions/extension_date_time.dart';
 import 'package:uuid/uuid.dart';
 
 import '../model/task_model.dart';
@@ -13,95 +14,98 @@ class TaskRepository {
     DateTime? initialDate,
     DateTime? finalDate,
     DateTime? fixedDate,
-    bool showFinished = true,
   }) async {
     final prefs = await SharedPreferences.getInstance();
 
     final String taksJson = prefs.getString('taksJson') ?? '';
+    //  print('JSON==$taksJson');
     List<Task> tasks = [];
-    tasks = taskFromJson(taksJson);
-    //return tasks;
-
-    if (tasks.isNotEmpty) {
-      if (fixedDate != null) {
-        print('fixedDate');
-        return tasks
-            .where((tk) =>
-                DateFormat('dd/MM/yyyy').format(tk.datatarefa) ==
-                DateFormat('dd/MM/yyyy').format(fixedDate))
-            .toList();
-      } else if (initialDate != null && finalDate == null) {
-        print('initialDate');
-        initialDate =
-            DateTime(initialDate.year, initialDate.month, initialDate.day);
-
-        return tasks
-            .where((tk) => tk.datatarefa
-                .isBefore(initialDate!.subtract(const Duration(days: 1))))
-            .toList();
-      } else if (initialDate == null && finalDate != null) {
-        finalDate = DateTime(finalDate.year, finalDate.month, finalDate.day);
-
-        print('finalDate');
-        return tasks
-            .where((tk) =>
-                tk.datatarefa.isAfter(finalDate!.add(const Duration(days: 1))))
-            .toList();
-      } else if (initialDate != null && finalDate != null) {
-        finalDate = DateTime(finalDate.year, finalDate.month, finalDate.day);
-        initialDate =
-            DateTime(initialDate.year, initialDate.month, initialDate.day);
-        print('initialDate||finalDate');
-        tasks = tasks
-            .where((tk) => tk.datatarefa
-                .isBefore(initialDate!.subtract(const Duration(days: 1))))
-            .toList();
-
-        tasks = tasks
-            .where((tk) => (tk.datatarefa
-                .isAfter(finalDate!.add(const Duration(days: 1)))))
-            .toList();
-      }
+    if (taksJson.isNotEmpty) {
+      tasks = taskFromJson(taksJson);
+    } else {
+      return [];
     }
 
-    // if (!showFinished) {
-    //   tasks = tasks.where((tk) => tk.finalizada == true).toList();
-    // }
+    if (fixedDate != null) {
+      return tasks
+          .where((tk) =>
+              DateFormat('dd/MM/yyyy').format(tk.datatarefa) ==
+              DateFormat('dd/MM/yyyy').format(fixedDate))
+          .toList();
+    } else if (initialDate != null && finalDate == null) {
+      initialDate =
+          DateTime(initialDate.year, initialDate.month, initialDate.day);
 
-    print(tasks);
+      return tasks
+          .where((tk) => tk.datatarefa
+              .isBefore(initialDate!.subtract(const Duration(days: 1))))
+          .toList();
+    } else if (initialDate == null && finalDate != null) {
+      finalDate = DateTime(finalDate.year, finalDate.month, finalDate.day);
+
+      return tasks
+          .where((tk) =>
+              tk.datatarefa.isAfter(finalDate!.add(const Duration(days: 1))))
+          .toList();
+    } else if (initialDate != null && finalDate != null) {
+      finalDate = DateTime(finalDate.year, finalDate.month, finalDate.day);
+      initialDate =
+          DateTime(initialDate.year, initialDate.month, initialDate.day);
+
+      tasks = tasks
+          .where((tk) =>
+              tk.datatarefa.isBefore(finalDate!.add(const Duration(days: 1))))
+          .toList();
+
+      tasks = tasks
+          .where((tk) => (tk.datatarefa
+              .isAfter(initialDate!.subtract(const Duration(days: 1)))))
+          .toList();
+    }
+
+    tasks.sort((a, b) => a.datatarefa.compareTo(b.datatarefa));
 
     return tasks;
   }
 
-  Future<List<Task>> getTasksToday({bool showFinished = true}) {
+  Future<List<Task>> getTasksToday() {
     return getTasks(
       fixedDate: DateTime.now(),
-      showFinished: showFinished,
     );
   }
 
-  Future<List<Task>> getTasksTomorrow({bool showFinished = true}) {
+  Future<List<Task>> getTasksTomorrow() {
     return getTasks(
       fixedDate: DateTime.now().add(const Duration(days: 1)),
-      showFinished: showFinished,
     );
   }
 
-  Future<List<Task>> getTasksWeek({bool showFinished = true}) {
+  Future<List<Task>> getTasksWeek() {
     final today = DateTime.now();
     var startFilter = DateTime(today.year, today.month, today.day, 0, 0, 0);
-    DateTime endFilter;
     if (startFilter.weekday != DateTime.monday) {
       startFilter =
           startFilter.subtract(Duration(days: (startFilter.weekday - 1)));
     }
 
-    endFilter = startFilter.add(const Duration(days: 7));
+    // ignore: unused_local_variable
+    DateTime endFilter = startFilter.add(const Duration(days: 7));
+
+    // return getTasks(
+    //   finalDate: endFilter,
+    //   initialDate: startFilter,
+    // );
 
     return getTasks(
-      finalDate: startFilter,
-      initialDate: endFilter,
-      showFinished: showFinished,
+      initialDate: DateTime.now().firstDayOfWeek,
+      finalDate: DateTime.now().lastDayOfWeek,
+    );
+  }
+
+  Future<List<Task>> getTasksMonth() {
+    return getTasks(
+      initialDate: DateTime.now().fisrtDayOfMonth,
+      finalDate: DateTime.now().lastDayOfMonth,
     );
   }
 
@@ -166,22 +170,18 @@ class TaskRepository {
   }
 
   Future<void> checkOrUncheckTask(Task task) async {
-    getTasks().then((value) {
-      if (value.isNotEmpty) {
-        for (var tk in value) {
-          if (tk.uuid.toLowerCase() == task.uuid.toLowerCase()) {
-            tk.finalizada = !tk.finalizada;
-          }
+    await getTasks().then((value) {
+      for (var tk in value) {
+        if (tk.uuid.toLowerCase() == task.uuid.toLowerCase()) {
+          tk.finalizada = !tk.finalizada;
         }
-        saveList(value);
       }
+      saveList(value);
     });
   }
 
   Future<bool> saveList(List<Task> taskList) async {
     final prefs = await SharedPreferences.getInstance();
-
-    print(jsonEncode(taskList));
     return prefs.setString('taksJson', jsonEncode(taskList));
   }
 
@@ -214,6 +214,12 @@ class TaskRepository {
           initialDate: initialDate,
           finalDate: finalDate,
         ).then((value) {
+          return value.length;
+        }).onError((error, stackTrace) {
+          return 0;
+        });
+      case TaskFilterEnum.mes:
+        return getTasksMonth().then((value) {
           return value.length;
         }).onError((error, stackTrace) {
           return 0;

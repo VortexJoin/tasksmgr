@@ -39,7 +39,7 @@ class Task {
       };
 }
 
-enum TaskFilterEnum { hoje, amanha, semana, periodo }
+enum TaskFilterEnum { hoje, amanha, semana, periodo, mes }
 
 extension TaskFilterDescription on TaskFilterEnum {
   String get descricao {
@@ -52,6 +52,8 @@ extension TaskFilterDescription on TaskFilterEnum {
         return 'DA SEMANA';
       case TaskFilterEnum.periodo:
         return 'DO PERIODO';
+      case TaskFilterEnum.mes:
+        return 'DO MÊS';
     }
   }
 }
