@@ -7,6 +7,7 @@ import 'package:tasksmgr/pages/home/widgets/body_tasks.dart';
 import 'package:tasksmgr/pages/task/task_page.dart';
 
 import '../../main.dart';
+import '../../services/google_calendar_service.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -25,6 +26,13 @@ class _HomePageState extends State<HomePage> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       controller.setTaskFilterEnum(TaskFilterEnum.hoje);
       controller.refreshTaskList();
+
+      var calendar = CalendarService();
+
+      calendar.getEvents(
+        start: DateTime(2023, 01, 01),
+        end: DateTime(2023, 02, 01),
+      );
     });
   }
 
