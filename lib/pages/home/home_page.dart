@@ -27,12 +27,12 @@ class _HomePageState extends State<HomePage> {
       controller.setTaskFilterEnum(TaskFilterEnum.hoje);
       controller.refreshTaskList();
 
-      var calendar = CalendarService();
+      // var calendar = CalendarService();
 
-      calendar.getEvents(
-        start: DateTime(2023, 01, 01),
-        end: DateTime(2023, 02, 01),
-      );
+      // calendar.getEvents(
+      //   start: DateTime(2023, 01, 01),
+      //   end: DateTime(2023, 02, 01),
+      // );
     });
   }
 
@@ -95,6 +95,25 @@ class _HomePageState extends State<HomePage> {
           });
         },
         child: const Icon(Icons.add),
+      ),
+      drawer: Drawer(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(5, 30, 5, 5),
+          child: Column(
+            children: [
+              ListTile(
+                title: const Text('1'),
+                onTap: () {
+                  insertEvent();
+                },
+              ),
+              ListTile(
+                title: const Text('2'),
+                onTap: () {},
+              ),
+            ],
+          ),
+        ),
       ),
       body: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20),

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "745319101417",
+    "project_id": "task-manager-rjinfor",
+    "storage_bucket": "task-manager-rjinfor.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:745319101417:android:75444e776558257b741178",
+        "android_client_info": {
+          "package_name": "com.example.tasksmgr"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "745319101417-apscs2majdq6p37p71ip3m6kt7j3s4b0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZoPskonwI12C0nAklTmecwlutmfrt38E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "745319101417-apscs2majdq6p37p71ip3m6kt7j3s4b0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

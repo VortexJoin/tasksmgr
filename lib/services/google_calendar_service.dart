@@ -1,71 +1,57 @@
-import 'dart:async';
-import 'package:googleapis/calendar/v3.dart';
-import 'package:googleapis_auth/auth_io.dart';
-import 'package:http/http.dart' as http;
+// ignore_for_file: avoid_print
+import 'package:flutter/services.dart';
+import 'package:googleapis/calendar/v3.dart' as calendar;
+import 'package:googleapis_auth/auth_io.dart' as auth;
+import 'package:http/http.dart';
 
-class CalendarEvent {
-  String summary;
-  String description;
-  DateTime? start;
-  DateTime? end;
+// Replace this with the path to your service account JSON file
+const String serviceAccountJson = 'android/app/google-services.json';
 
-  CalendarEvent({
-    required this.summary,
-    required this.description,
-    this.start,
-    this.end,
-  });
+Future<calendar.CalendarApi> getCalendarService() async {
+  // final auth.ServiceAccountCredentials credentials =
+  //     auth.ServiceAccountCredentials();
+
+  // auth.ServiceAccountCredentials.fromJson(
+  //   await rootBundle.loadString(serviceAccountJson),
+  // );
+
+  final client = await auth.clientViaApplicationDefaultCredentials(
+    scopes: [calendar.CalendarApi.calendarScope],
+    baseClient: Client(),
+  );
+
+  return calendar.CalendarApi(client);
 }
 
-class CalendarService {
-  late CalendarApi calendarApi;
+insertEvent() async {
+  final calendarService = await getCalendarService();
 
-  bool _isStarted = false;
-  String _error = '';
-
-  CalendarService() {
-    _init();
-  }
-
-  _init() async {
-    print('CalendarService-Starting');
-    try {
-      // http.Client client = http.Client();
-      http.Client httpClient = await clientViaApplicationDefaultCredentials(
-        scopes: [
-          CalendarApi.calendarEventsScope,
-        ],
-      );
-
-      calendarApi = CalendarApi(httpClient);
-      _isStarted = true;
-      print('CalendarService-Starting-Okay');
-    } catch (e) {
-      print('CalendarService-Starting-Error-$e');
-      _isStarted = false;
-      _error = e.toString();
+  // Read a list of calendars
+  calendar.CalendarList calendarList =
+      await calendarService.calendarList.list();
+  print('Calendars:');
+  if (calendarList.items != null) {
+    for (final calendarListEntry in calendarList.items!) {
+      print('- ${calendarListEntry.summary}');
     }
+  } else {
+    print('No calendars found.');
   }
 
-  Future<List<CalendarEvent>> getEvents({
-    required DateTime start,
-    required DateTime end,
-  }) async {
-    const calendarId = "primary";
+  // Create a new event
+  final newEvent = calendar.Event()
+    ..summary = 'Test Event'
+    ..description = 'This is a test event created from the API'
+    ..start = calendar.EventDateTime();
+  newEvent.end = calendar.EventDateTime()
+    ..dateTime = (DateTime.now().add(const Duration(hours: 1))).toUtc()
+    ..timeZone = 'UTC';
 
-    final events = await calendarApi.events.list(
-      calendarId,
-      timeMin: start,
-      timeMax: end,
-    );
-
-    return events.items!
-        .map((event) => CalendarEvent(
-              summary: event.summary ?? '',
-              description: event.description ?? '',
-              start: event.start!.dateTime!,
-              end: event.end!.dateTime,
-            ))
-        .toList();
-  }
+  // Replace 'primary' with the calendar ID you want to create the event in
+  final createdEvent = await calendarService.events.insert(newEvent, 'primary');
+  print('Event created:');
+  print('- Summary: ${createdEvent.summary}');
+  print('- Description: ${createdEvent.description}');
+  print('- Start: ${createdEvent.start}');
+  print('- End: ${createdEvent.end}');
 }

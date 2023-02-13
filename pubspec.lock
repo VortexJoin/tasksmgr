@@ -89,6 +89,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.1.4"
+  firebase_core:
+    dependency: "direct main"
+    description:
+      name: firebase_core
+      sha256: be13e431c0c950f0fc66bdb67b41b8059121d7e7d8bbbc21fb59164892d561f8
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.5.0"
+  firebase_core_platform_interface:
+    dependency: transitive
+    description:
+      name: firebase_core_platform_interface
+      sha256: "5615b30c36f55b2777d0533771deda7e5730e769e5d3cb7fda79e9bed86cfa55"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.5.3"
+  firebase_core_web:
+    dependency: transitive
+    description:
+      name: firebase_core_web
+      sha256: "4b3a41410f3313bb95fd560aa5eb761b6ad65c185de772c72231e8b4aeed6d18"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.1"
   flex_color_scheme:
     dependency: "direct main"
     description:
@@ -153,10 +177,10 @@ packages:
     dependency: "direct main"
     description:
       name: googleapis
-      sha256: "89c3599e9fba0c9723a7370cc67a7fccec512f136103916ffcb421e4f9ac12c9"
+      sha256: "0af31e6aba9c6a72ee9c6fd02cb10813ed16d34bbd392b500fb147d64558f95d"
       url: "https://pub.dev"
     source: hosted
-    version: "10.0.0"
+    version: "10.1.0"
   googleapis_auth:
     dependency: "direct main"
     description:
