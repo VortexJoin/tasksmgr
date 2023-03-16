@@ -1,4 +1,4 @@
-package com.example.tasksmgr
+package com.nxs.dev.taskmgr
 
 import io.flutter.embedding.android.FlutterActivity
 

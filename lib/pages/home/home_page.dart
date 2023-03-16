@@ -7,8 +7,6 @@ import 'package:tasksmgr/pages/home/widgets/body_tasks.dart';
 import 'package:tasksmgr/pages/task/task_page.dart';
 
 import '../../main.dart';
-import '../../services/google_calendar_service.dart';
-
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -96,25 +94,25 @@ class _HomePageState extends State<HomePage> {
         },
         child: const Icon(Icons.add),
       ),
-      drawer: Drawer(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(5, 30, 5, 5),
-          child: Column(
-            children: [
-              ListTile(
-                title: const Text('1'),
-                onTap: () {
-                  insertEvent();
-                },
-              ),
-              ListTile(
-                title: const Text('2'),
-                onTap: () {},
-              ),
-            ],
-          ),
-        ),
-      ),
+      // drawer: Drawer(
+      //   child: Padding(
+      //     padding: const EdgeInsets.fromLTRB(5, 30, 5, 5),
+      //     child: Column(
+      //       children: [
+      //         ListTile(
+      //           title: const Text('1'),
+      //           onTap: () {
+      //             insertEvent();
+      //           },
+      //         ),
+      //         ListTile(
+      //           title: const Text('2'),
+      //           onTap: () {},
+      //         ),
+      //       ],
+      //     ),
+      //   ),
+      // ),
       body: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(

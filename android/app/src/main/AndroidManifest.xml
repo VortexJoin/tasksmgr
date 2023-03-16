@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.tasksmgr">
+    package="com.nxs.dev.taskmgr">
    <application
         android:label="Minhas de Tarefas"
         android:name="${applicationName}"
