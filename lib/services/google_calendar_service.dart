@@ -1,5 +1,4 @@
 // ignore_for_file: avoid_print
-import 'package:flutter/services.dart';
 import 'package:googleapis/calendar/v3.dart' as calendar;
 import 'package:googleapis_auth/auth_io.dart' as auth;
 import 'package:http/http.dart';
