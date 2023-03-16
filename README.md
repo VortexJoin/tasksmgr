@@ -1,16 +1,10 @@
-# tasksmgr
+# Projeto Gerenciador de Tarefas
 
-A new Flutter project.
+Projeto desenvolvido em flutter com objetivo em gerenciar taefas do dia a dia.
+E um projeto para ficar de portifólio.
 
-## Getting Started
+Aqui foi utilizados conceritos de clean code e gerenciamento de estado nativo.
+Todos os dados ficam em json no cache local, asism o projeto opera em várias plataformas sem precisar de adaptações.
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Demo
+https://tasks.nxs.dev.br/#/
